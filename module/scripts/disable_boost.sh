@@ -18,7 +18,7 @@ write_value() {
 }
 
 disable_kernel_boost() {
-    echo "正在禁用内核级 Boost..."
+    echo "Disabling kernel-level boost..."
 
     write_value "/sys/devices/system/cpu/cpufreq/hotplug/cpu_hotplug_disable" "1"
     write_value "/sys/module/control_center/parameters/*" "N"
@@ -76,7 +76,7 @@ disable_kernel_boost() {
 }
 
 disable_cpuset_boost() {
-    echo "正在禁用 Cpuset Boost..."
+    echo "Disabling cpuset boost..."
     if [ -d /dev/cpuset/foreground/boost ]; then
         rmdir /dev/cpuset/foreground/boost
     fi
@@ -86,7 +86,7 @@ disable_cpuset_boost() {
 }
 
 disable_system_boost() {
-    echo "正在禁用系统级服务 Boost..."
+    echo "Disabling system service boost..."
     stop miuibooster 2>/dev/null
     stop oneplus_brain_service 2>/dev/null
     stop vendor.perfservice 2>/dev/null
@@ -108,7 +108,7 @@ disable_system_boost() {
 
 disable_oneplus_game_boost() {
     if [ -e /proc/game_opt ]; then
-        echo "正在禁用 OnePlus Game Boost..."
+        echo "Disabling OnePlus Game Boost..."
         write_value "/proc/game_opt/cpu_max_freq" "'0:2147483647 1:2147483647 2:2147483647 3:2147483647 4:2147483647 5:2147483647 6:2147483647 7:2147483647'"
         write_value "/proc/game_opt/cpu_min_freq" "'0:0 1:0 2:0 3:0 4:0 5:0 6:0 7:0'"
         write_value "/proc/game_opt/disable_cpufreq_limit" "1"
@@ -120,7 +120,7 @@ disable_oneplus_game_boost() {
 
 disable_schedtune_boost() {
     if [ -d /dev/stune/ ]; then
-        echo "正在禁用 Schedtune Boost..."
+        echo "Disabling schedtune boost..."
         write_value "/dev/stune/schedtune.boost" "0"
         write_value "/dev/stune/schedtune.prefer_idle" "0"
         write_value "/dev/stune/*/schedtune.prefer_idle" "0"
@@ -135,7 +135,7 @@ disable_schedtune_boost() {
 
 disable_uclamp_boost() {
     if [ -d /dev/cpuctl/ ]; then
-        echo "正在禁用 Uclamp Boost..."
+        echo "Disabling uclamp boost..."
         write_value "/dev/cpuctl/cpu.uclamp.sched_boost_no_override" "0"
         write_value "/dev/cpuctl/cpu.uclamp.min" "0"
         write_value "/dev/cpuctl/cpu.uclamp.latency_sensitive" "0"
@@ -145,7 +145,7 @@ disable_uclamp_boost() {
         write_value "/dev/cpuctl/*/cpu.uclamp.latency_sensitive" "0"
         write_value "/dev/cpuctl/*/cpu.shares" "0"
         
-        # 恢复部分默认值
+        # Restore some defaults
         write_value "/dev/cpuctl/cpu.shares" "1024"
         write_value "/dev/cpuctl/top-app/cpu.shares" "1024"
         write_value "/dev/cpuctl/background/cpu.shares" "256"
@@ -154,13 +154,13 @@ disable_uclamp_boost() {
 }
 
 disable_core_ctl() {
-    echo "正在禁用 CoreCtl..."
+    echo "Disabling CoreCtl..."
     write_value "/sys/devices/system/cpu/cpu*/core_ctl/enable" "0"
     write_value "/sys/devices/system/cpu/cpu*/core_ctl/core_ctl_boost" "0"
 }
 
 disable_thermal() {
-    echo "正在禁用温控降频..."
+    echo "Disabling thermal throttling..."
     for cpu in $(seq 0 7); do
         write_value "/sys/class/thermal/thermal_message/cpu_limits" "cpu$cpu 2147483647"
     done
@@ -172,7 +172,7 @@ disable_thermal() {
 
 disable_flyme() {
     if [ -e /sys/class/meizu/wireless/wls_level ]; then
-        echo "正在禁用 Flyme 相关设置..."
+        echo "Disabling Flyme settings..."
         write_value "/sys/class/meizu/wireless/wls_level" "10"
         pm disable com.meizu.pps 2>/dev/null
         setprop ro.surface_flinger.use_content_detection_for_refresh_rate 0 2>/dev/null
@@ -180,14 +180,14 @@ disable_flyme() {
 }
 
 disable_msm_performance() {
-    echo "正在禁用 MSM Performance Boost..."
+    echo "Disabling MSM Performance Boost..."
     write_value "/sys/module/msm_thermal/parameters/thermal_mitigation" "0"
     write_value "/sys/kernel/msm_performance/parameters/cpu_min_freq" "0:0 1:0 2:0 3:0 4:0 5:0 6:0 7:0"
     write_value "/sys/kernel/msm_performance/parameters/cpu_max_freq" "0:9999999 1:9999999 2:9999999 3:9999999 4:9999999 5:9999999 6:9999999 7:9999999"
 }
 
 main() {
-    echo "--- 开始执行系统 Boost 禁用脚本 ---"
+    echo "--- Starting system boost disabling script ---"
     
     disable_kernel_boost
     disable_system_boost
@@ -200,7 +200,7 @@ main() {
     disable_msm_performance
     disable_flyme
     
-    echo "--- 所有禁用操作已执行完毕 ---"
+    echo "--- All disable operations completed ---"
 }
 
 main

@@ -57,7 +57,7 @@ export default {
   lang_en: 'English',
   lang_zh: 'Chinese',
   lang_en_short: 'EN',
-  lang_zh_short: '中',
+  lang_zh_short: 'ZH',
   cpu_governor: 'CPU governor',
   governor_system: 'Use system governor',
   freq_range_steps_below: 'Frequency steps below target',

@@ -3,5 +3,5 @@ name=yumi
 version=v2.0.2
 versionCode=20002
 author=yuki
-description= yumi
+description=CPU scheduling for Android with frame-aware scheduling and a CPU load governor.
 updateJson=https://raw.githubusercontent.com/imacte/yumi/main/updateInformation/update.json

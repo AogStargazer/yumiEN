@@ -1,6 +1,6 @@
-[Read this document in English](README.en.md)
+[Read the Chinese documentation](README.zh.md)
 
-# yumi - 智能 CPU 调度控制器
+# yumi - Intelligent CPU Scheduling Controller
 
 <div align="center">
 
@@ -11,47 +11,47 @@
 [![AArch64](https://img.shields.io/badge/arch-AArch64-FF6B6B.svg?style=for-the-badge)](https://en.wikipedia.org/wiki/AArch64)
 [![Root Required](https://img.shields.io/badge/Root-Required-FF5722.svg?style=for-the-badge)](https://magiskmanager.com/)
 
-**🚀 智能 CPU 调度系统 - eBPF 内核级监控 + 高性能 Rust 守护进程 + PID 控制 FAS 帧感知调度 + CPU 负载调速器**
+**🚀 Intelligent CPU Scheduling System — eBPF Kernel-Level Monitoring + High-Performance Rust Daemon + PID-Controlled FAS Frame-Aware Scheduling + CPU Load Governor**
 
 </div>
 
 -----
 
-## 📋 项目介绍
+## 📋 About The Project
 
-**yumi** 是一个功能强大的 Android CPU 调度控制系统，由轻量级的 **WebUI** 管理界面和高性能的 **Rust 守护进程 (yumi)** 组成。系统通过 **eBPF** 内核探针实时采集 CPU 调度事件和渲染帧数据，结合先进的 **PID 控制器** 和 **CPU 负载调速器 (CLG)**，根据不同使用场景动态调整 CPU 频率，实现最佳的性能与能效平衡。内置的 **FAS (Frame Aware Scheduling)** 帧感知调度引擎可实时分析游戏帧时间，以逐帧精度动态调频，在保证流畅度的同时最大化省电。
+**yumi** is a powerful Android CPU scheduling control system, consisting of a lightweight **WebUI** management interface and a high-performance **Rust daemon (yumi)**. The system uses **eBPF** kernel probes to collect CPU scheduling events and rendering frame data in real time. Combined with an advanced **PID controller** and **CPU Load Governor (CLG)**, it dynamically adjusts CPU frequency for different usage scenarios to achieve the optimal balance between performance and power efficiency. The built-in **FAS (Frame Aware Scheduling)** engine analyzes game frame times in real time to dynamically adjust CPU frequency on a per-frame basis, maximizing power savings while maintaining smooth gameplay.
 
-### ✨ 主要特性
+### ✨ Key Features
 
-  * 🔄 **智能动态模式切换** - 根据当前前台应用自动调整性能模式。
-  * 🎯 **FAS 帧感知调度** - 内置 PID 控制器 + 帧时间分析引擎，逐帧动态调频，游戏场景下兼顾流畅与功耗。
-  * 📊 **eBPF 内核级监控** - 通过 `sched_switch` tracepoint 和 `queueBuffer` uprobe 实现零开销的 CPU 利用率和帧率采集。
-  * ⚡ **CPU 负载调速器 (CLG)** - 基于 eBPF 实时负载数据为日常非游戏场景设置各 CPU 簇的频率范围。
-  * 🌡️ **温度感知调控** - 实时读取 CPU 温度传感器，超过阈值时自动降频保护。
-  * 🌙 **智能息屏节电** - 息屏时自动进入 Doze 模式，强制限制性能上限，极致省电。
-  * 🌐 **轻量 WebUI** - 无需安装额外 App，通过浏览器即可管理调度配置。
-  * 📱 **应用规则管理** - 为不同应用设置专属的性能策略，支持 per-app 帧率档位和余量配置。
-  * 🔧 **高度可配置** - YAML 配置文件支持深度自定义，配置热重载无需重启。
-  * 🌍 **多语言支持** - 基于 Fluent 的 i18n 国际化系统，支持中英文日志。
+  * 🔄 **Smart Dynamic Mode Switching** — Automatically adjusts performance modes based on the current foreground application.
+  * 🎯 **FAS Frame-Aware Scheduling** — Built-in PID controller + frame time analysis engine for per-frame dynamic frequency scaling, balancing smoothness and power in gaming scenarios.
+  * 📊 **eBPF Kernel-Level Monitoring** — Zero-overhead CPU utilization and frame rate collection via `sched_switch` tracepoint and `queueBuffer` uprobe.
+  * ⚡ **CPU Load Governor (CLG)** — Per-cluster CPU frequency ranges based on real-time eBPF load data for everyday non-gaming use.
+  * 🌡️ **Temperature-Aware Throttling** — Reads CPU temperature sensors in real time, automatically throttling when thresholds are exceeded.
+  * 🌙 **Smart Screen-Off Power Saving** — Automatically enters Doze mode when the screen is off, enforcing a low performance ceiling for maximum power savings.
+  * 🌐 **Lightweight WebUI** — No extra app required; manage all scheduling settings directly from your browser.
+  * 📱 **App Rule Management** — Set dedicated performance strategies for different applications, with per-app frame rate gear and margin support.
+  * 🔧 **Highly Configurable** — YAML configuration files support deep customization with hot-reload — no restart needed.
+  * 🌍 **Multi-Language Support** — Fluent-based i18n internationalization system, supporting Chinese and English log output.
 
-## 🔧 系统要求
+## 🔧 System Requirements
 
-  * **Android 版本**: Android 8.0 (API 26) 及以上。
-  * **架构支持**: ARM64 (AArch64)。
-  * **权限要求**: Root 权限。
-  * **内核要求**: 支持 eBPF、sched tracepoint 和 uprobe（需要 `CONFIG_BPF`、`CONFIG_BPF_SYSCALL` 等内核选项）。FPS 优先使用 RingBuf，不支持时自动尝试独立的 PerfEventArray 后端；CPU 探针不依赖 RingBuf。最终可用性取决于设备内核功能与权限。
+  * **Android Version**: Android 8.0 (API 26) and above.
+  * **Architecture Support**: ARM64 (AArch64).
+  * **Permissions Required**: Root access.
+  * **Kernel Requirements**: eBPF support (`CONFIG_BPF`, `CONFIG_BPF_SYSCALL`, etc.).
 
-## 🏗️ 系统架构
+## 🏗️ System Architecture
 
-yumi 采用 **Monitor + Scheduler** 双线程架构，通过 `mpsc` 事件通道解耦数据采集与调度决策：
+yumi uses a **Monitor + Scheduler** dual-thread architecture, decoupling data collection from scheduling decisions via an `mpsc` event channel:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                   Monitor 线程组                      │
+│                  Monitor Thread Group                 │
 │                                                      │
 │  ┌──────────────┐  ┌──────────────┐  ┌────────────┐ │
 │  │ app_detect   │  │ fps_monitor  │  │ cpu_monitor │ │
-│  │ (Cgroup检测)  │  │ (eBPF uprobe)│  │(eBPF trace)│ │
+│  │ (Cgroup)     │  │ (eBPF uprobe)│  │(eBPF trace)│ │
 │  └──────┬───────┘  └──────┬───────┘  └─────┬──────┘ │
 │         │                 │                 │        │
 │         │     ┌───────────┴─────────────────┘        │
@@ -60,121 +60,121 @@ yumi 采用 **Monitor + Scheduler** 双线程架构，通过 `mpsc` 事件通道
           │     │
           ▼     ▼
 ┌─────────────────────────────────────────────────────┐
-│               Scheduler IPC 线程                      │
+│              Scheduler IPC Thread                     │
 │                                                      │
 │  ┌──────────────┐  ┌──────────────┐                  │
-│  │ FAS 控制器    │  │ CLG 负载调速 │                  │
-│  │ (游戏场景)    │  │ (日常场景)    │                  │
+│  │ FAS Controller│  │ CLG Governor │                  │
+│  │ (Gaming)      │  │ (Daily use)  │                  │
 │  └──────────────┘  └──────────────┘                  │
 │               ▼                                      │
-│     sysfs 频率写入 (FastWriter)                       │
+│     sysfs Frequency Write (FastWriter)               │
 └─────────────────────────────────────────────────────┘
 ```
 
-### 事件总线
+### Event Bus
 
-系统使用五种核心事件驱动调度决策：
+The system uses five core events to drive scheduling decisions:
 
-| 事件 | 来源 | 描述 |
+| Event | Source | Description |
 | :--- | :--- | :--- |
-| `ModeChange` | app_detect | 前台应用切换引起的模式变更，携带包名、PID、模式、温度。 |
-| `FrameUpdate` | fps_monitor (eBPF) | 每一帧渲染完成时触发，携带帧间隔（纳秒级精度）。 |
-| `SystemLoadUpdate` | cpu_monitor (eBPF) | 每 200ms 触发，携带各核心利用率和前台应用最重线程利用率。 |
-| `ScreenStateChange` | screen_detect | 屏幕亮灭事件。 |
-| `ConfigReload` | config_watcher | 配置文件变更事件。 |
+| `ModeChange` | app_detect | Mode change triggered by foreground app switch; carries package name, PID, mode, and temperature. |
+| `FrameUpdate` | fps_monitor (eBPF) | Triggered on each frame render completion; carries frame interval (nanosecond precision). |
+| `SystemLoadUpdate` | cpu_monitor (eBPF) | Triggered every 200ms; carries per-core utilization and foreground app's heaviest thread utilization. |
+| `ScreenStateChange` | screen_detect | Screen on/off events. |
+| `ConfigReload` | config_watcher | Configuration file change events. |
 
-## 🎯 性能模式
+## 🎯 Performance Modes
 
-yumi 提供五种性能模式：
+yumi offers five performance modes:
 
-| 模式 | 图标 | 特点 | 适用场景 |
+| Mode | Icon | Characteristics | Use Case |
 | :--- | :--- | :--- | :--- |
-| **省电 (Powersave)** | 🔋 | 最大化续航，CLG 低性能上限。 | 待机、轻度使用、阅读。 |
-| **均衡 (Balance)** | ⚖️ | CLG 自适应调频，性能与功耗的最佳平衡点。 | 日常使用、社交应用。 |
-| **性能 (Performance)** | ⚡ | CLG 高响应配置，优先性能。 | 大型应用、轻度游戏。 |
-| **极速 (Fast)** | 🚀 | CLG 最大性能释放。 | 重度任务、性能测试。 |
-| **FAS (帧感知调度)** | 🎯 | PID 控制器实时分析帧时间，逐帧动态调频，自动档位切换。 | 游戏场景，兼顾流畅与省电。 |
+| **Powersave** | 🔋 | Maximizes battery life; CLG with low performance ceiling. | Standby, light use, reading. |
+| **Balance** | ⚖️ | CLG adaptive frequency scaling; optimal balance between performance and power. | Daily use, social apps. |
+| **Performance** | ⚡ | CLG high-responsiveness configuration; prioritizes performance. | Large applications, light gaming. |
+| **Fast** | 🚀 | CLG maximum performance output. | Heavy tasks, performance testing. |
+| **FAS (Frame-Aware Scheduling)** | 🎯 | PID controller analyzes frame times in real time; per-frame dynamic frequency scaling with automatic gear switching. | Gaming — balances smoothness and power saving. |
 
-### CLG (CPU Load Governor) 说明
+### CLG (CPU Load Governor) Overview
 
-CLG 基于 eBPF 采集的 CPU 利用率，结合 EMA 平滑、升降频速率限制和 headroom 因子计算每个簇的频率上限。在 WebUI 的「详细配置」中，各 CLG 模式和 FAS 可分别设置「频率下探档数」（`freq_range_steps_below`）。CLG 默认最多下探两档，FAS 默认一档。填 0 只使用目标频点，实际下探幅度受各簇可用档位和性能地板限制。极速模式的默认地板与上限相同，因此只有最高一档可用。
+CLG uses CPU utilization from eBPF, EMA smoothing, rate limits, and a headroom factor to set a frequency ceiling for each cluster. In the WebUI’s Detailed Config view, each CLG mode and FAS can set Frequency steps below target (`freq_range_steps_below`). CLG defaults to two steps and FAS defaults to one. A value of 0 uses only the target frequency. The available frequency steps and performance floor bound the lower limit. By default, Fast mode sets its floor equal to its ceiling, allowing only the top frequency step.
 
-在 WebUI 的「详细配置」中，可以为每个 CLG 模式和 FAS 分别选择 CPU 调速器。YAML 配置项为 `config.yaml` 中各模式的 `cpu_load_governor.governor` 和 `rules.yaml` 中的 `fas_rules.governor`。默认 `system` 沿用接管前的调速器。设备支持 `schedutil` 时可以用它在区间内随负载调频，`performance` 则会请求区间上限。
+In the WebUI's Detailed Config view, each CLG mode and FAS can select a CPU governor. The YAML keys are each mode's `cpu_load_governor.governor` in `config.yaml` and `fas_rules.governor` in `rules.yaml`. The default, `system`, uses the governor active before Yumi took control. A supported `schedutil` governor selects frequencies within the range based on load. The `performance` governor requests the top of the range.
 
-息屏时，系统自动进入 **Doze 模式**，CLG 被重新配置为极致省电参数（性能上限锁死 40%、升频极迟钝、瞬间降频），大幅降低待机功耗。
+When the screen is off, the system automatically enters **Doze mode**, where CLG is reconfigured with extreme power-saving parameters (performance ceiling locked to 40%, extremely sluggish frequency ramp-up, instant ramp-down), dramatically reducing standby power consumption.
 
-## 🌐 WebUI 管理界面
+## 🌐 WebUI Management Interface
 
-yumi 内置轻量级 WebUI，通过浏览器即可完成所有管理操作，无需安装额外 App。
+yumi includes a lightweight built-in WebUI. All management operations can be performed through a browser — no extra app installation needed.
 
-  * **模式切换** - 实时切换性能模式。
-  * **应用规则管理** - 为不同应用配置专属性能策略。
-  * **配置编辑** - 在线编辑 YAML 配置文件。
-  * **日志查看** - 实时查看 yumi 守护进程日志。
+  * **Mode Switching** — Switch performance modes in real time.
+  * **App Rule Management** — Configure dedicated performance strategies for different apps.
+  * **Configuration Editing** — Edit YAML configuration files online.
+  * **Log Viewer** — View yumi daemon logs in real time.
 
 -----
 
-### 🛠️ 调度核心 (yumi)
+### 🛠️ Scheduling Core (yumi)
 
-yumi 的核心是由一个 Rust 守护进程 **yumi** 驱动的。它使用 eBPF 内核探针进行零开销数据采集，以极低的资源占用实现高效的性能控制。
+The core of yumi is driven by a Rust daemon, **yumi**. It uses eBPF kernel probes for zero-overhead data collection, achieving efficient performance control with extremely low resource consumption.
 
-#### 核心特性
+#### Core Features
 
-  * **高性能 Rust 实现**: 极低的系统资源占用，运行功耗极低。
-  * **eBPF 内核级监控**: 通过 `sched_switch` tracepoint 精确采集每核心 CPU 利用率和线程运行时间；通过 `queueBuffer` uprobe 零开销捕获渲染帧间隔。
-  * **实时配置监听**: 支持配置文件（`config.yaml`）和规则文件（`rules.yaml`）热重载，切换模式无需重启。
-  * **内置 FAS 引擎**: PID 控制器驱动的帧感知调度，支持自动容量权重探测、per-app 配置、CPU 利用率辅助调频。
-  * **CLG 负载调速器**: 基于 eBPF 实时负载调整每个 CPU 簇的频率范围。
-  * **多语言国际化**: 基于 Fluent 的 i18n 系统，支持中英文日志输出。
+  * **High-Performance Rust Implementation**: Extremely low system resource usage and minimal power consumption.
+  * **eBPF Kernel-Level Monitoring**: Precisely collects per-core CPU utilization and thread runtime via `sched_switch` tracepoint; captures rendering frame intervals with zero overhead via `queueBuffer` uprobe.
+  * **Real-time Configuration Monitoring**: Supports hot-reloading for `config.yaml` and `rules.yaml`, allowing mode switches without a reboot.
+  * **Built-in FAS Engine**: PID controller-driven frame-aware scheduling with automatic capacity weight detection, per-app configuration, and CPU utilization-assisted frequency scaling.
+  * **CLG Load Governor**: Per-cluster CPU frequency ranges based on real-time eBPF load data.
+  * **Multi-Language Internationalization**: Fluent-based i18n system supporting Chinese and English log output.
 
-#### 功能模块
+#### Feature Modules
 
-| 功能模块 | 描述 |
+| Feature Module | Description |
 | :--- | :--- |
-| **eBPF CPU 监控** | 通过 `sched_switch` tracepoint 采集每核心 idle/busy 时间和线程运行时间，带实时状态补偿（补偿当前正在执行但尚未触发上下文切换的任务）。 |
-| **eBPF FPS 监控** | 通过 `queueBuffer` uprobe 捕获渲染帧提交事件，内核侧 PID 过滤，perf event 零拷贝传输到用户态。 |
-| **FAS 帧感知调度** | PID 控制器驱动，实时分析帧间隔，通过 perf_index (0.0~1.0) 映射到 CPU 频率，逐帧动态调频。 |
-| **CLG 负载调速器** | 基于 eBPF 实时负载数据的自适应调频，支持按 cluster 独立控制，带升降频速率限制。 |
-| **CPU 频率控制** | 按 CPU 簇更新 sysfs 频率上下限，内核调速器在区间内选频。 |
-| **自动容量权重** | 运行时探测各核心簇的 `cpu_capacity`，自动计算 capacity_weight，无需手动配置核心架构。 |
-| **智能息屏节电** | 息屏自动进入 Doze 模式，CLG 强制限制为极致省电配置；亮屏自动恢复。 |
-| **温度感知调控** | 实时监控 CPU 温度，超过阈值时限制 FAS 性能上限。 |
-| **I/O 调度优化** | 遍历所有块设备，可自定义 I/O 调度器、预读大小、合并策略及 iostats 等参数。 |
-| **屏幕状态检测** | 通过 Netlink uevent 监听 power/backlight 事件，零轮询检测屏幕亮灭。 |
-| **前台应用检测** | 读取 `top-app` cgroup 进程列表，无阻塞防抖，自动过滤输入法和系统进程。 |
+| **eBPF CPU Monitor** | Collects per-core idle/busy time and thread runtime via `sched_switch` tracepoint, with real-time state compensation (compensating for tasks currently executing but not yet triggering a context switch). |
+| **eBPF FPS Monitor** | Captures frame submission events via `queueBuffer` uprobe, with kernel-side PID filtering and zero-copy perf event transport to userspace. |
+| **FAS Frame-Aware Scheduling** | PID controller-driven; analyzes frame intervals in real time and maps them to CPU frequency via perf_index (0.0–1.0) for per-frame dynamic frequency scaling. |
+| **CLG Load Governor** | Adaptive frequency scaling based on real-time eBPF load data, with independent per-cluster control and up/down rate limiting. |
+| **CPU Frequency Control** | Per-cluster sysfs frequency limits with in-range frequency selection by the kernel governor. |
+| **Auto Capacity Weight** | Runtime detection of each core cluster's `cpu_capacity` to automatically compute capacity_weight — no manual core architecture configuration needed. |
+| **Smart Screen-Off Power Saving** | Auto-enters Doze mode when screen is off with CLG forced into extreme power-saving configuration; auto-restores on screen on. |
+| **Temperature-Aware Throttling** | Real-time CPU temperature monitoring; limits FAS performance ceiling when threshold is exceeded. |
+| **I/O Scheduler Optimization** | Iterates over all block devices with customizable I/O schedulers, read-ahead size, merge policy, and iostats parameters. |
+| **Screen State Detection** | Monitors power/backlight events via Netlink uevent — zero-polling screen on/off detection. |
+| **Foreground App Detection** | Reads `top-app` cgroup process list with non-blocking debounce; automatically filters IMEs and system processes. |
 
 -----
 
-### 🎯 FAS 帧感知调度详解
+### 🎯 FAS Frame-Aware Scheduling — In Depth
 
-FAS (Frame Aware Scheduling) 是 yumi 内置的帧感知动态调频引擎，专为游戏场景设计。与传统的静态模式不同，FAS 通过 PID 控制器实时分析每一帧的渲染时间来精确控制 CPU 频率，在保证流畅度的同时尽可能降低功耗。
+FAS (Frame Aware Scheduling) is yumi's built-in frame-aware dynamic frequency scaling engine, designed specifically for gaming scenarios. Unlike traditional static modes, FAS precisely controls CPU frequency through a PID controller that analyzes the rendering time of every frame in real time, minimizing power consumption while ensuring smoothness.
 
-#### 工作原理
+#### How It Works
 
-FAS 引擎维护一个 **perf_index**（性能指数，范围 0.0~1.0），并通过 PID 控制器根据帧时间的实时反馈来调整它：
+The FAS engine maintains a **perf_index** (performance index, range 0.0–1.0) and adjusts it via a PID controller based on real-time frame time feedback:
 
-  * **帧时间超出预算** → PID 输出为负 → perf_index 上升 → CPU 频率提高
-  * **帧时间满足预算** → PID 输出为正 → perf_index 缓慢下降 → CPU 频率降低
-  * **perf_index 通过 capacity_weight 映射到各核心簇的实际频率档位**
+  * **Frame time exceeds budget** → PID output is negative → perf_index rises → CPU frequency increases
+  * **Frame time meets budget** → PID output is positive → perf_index slowly falls → CPU frequency decreases
+  * **perf_index is mapped to actual frequency steps for each core cluster via capacity_weight**
 
-PID 控制器使用三个可配置的系数（kp、ki、kd）分别控制比例、积分和微分响应，其中积分项带有泄漏机制防止饱和，微分项使用低通滤波抑制噪声。
+The PID controller uses three configurable coefficients (kp, ki, kd) to control proportional, integral, and derivative responses respectively. The integral term features a leak mechanism to prevent saturation, and the derivative term uses low-pass filtering to suppress noise.
 
-#### 核心机制
+#### Core Mechanisms
 
-  * **自动帧率档位切换**: 支持多档位帧率（如 30/60/90/120/144 fps），根据实际渲染能力自动升降档。降档前会先尝试 boost 提频确认是否真的需要降档，避免误降。支持低 perf 稳帧升档和极端帧率原生档位检测。
-  * **CPU 负载辅助调频**: 利用 eBPF 采集的前台最重线程利用率（EMA 平滑），对 perf_index 进行 util_cap 软封顶，防止频率虚高空转。
-  * **自动容量权重探测**: 运行时读取各核心簇的 `cpu_capacity`，自动计算 capacity_weight（大核权重更高），无需手动配置核心架构。
-  * **per-app 配置**: 支持为每个游戏单独配置帧率档位列表和帧率余量，运行时动态匹配最近的档位。
-  * **加载场景检测**: 自动识别游戏加载画面（持续重帧），进入加载状态后锁定中高频率，加载结束后带保护地恢复正常调度。
-  * **频率迟滞防抖**: 相邻频率档位间设置迟滞带，防止在边界处频繁跳档。
-  * **Jank 冷却机制**: 发生严重掉帧后进入冷却期，期间维持较高频率，避免掉帧后立即降频引发连锁卡顿。Jank 响应强度随连续掉帧次数指数递增。
-  * **频率校验与恢复**: 定期读回实际频率，检测是否被外部因素（如温控）覆盖，自动 unmount 并重新写入。
-  * **小窗模式支持**: FAS 状态支持挂起/恢复（5 秒宽限期），短暂切离后可快速恢复调度，无需重新初始化。
-  * **perf_floor 死锁救援**: 检测 perf_index 长时间贴地板但帧率严重不足的情况，自动重置到冷启动性能值。
+  * **Automatic Frame Rate Gear Switching**: Supports multiple frame rate targets (e.g., 30/60/90/120/144 fps) with automatic up/downshift based on actual rendering capability. Before downshifting, the engine first attempts a boost to confirm whether a downshift is truly necessary, preventing false downshifts. Supports low-perf stable-framerate upgrades and extreme framerate native gear detection.
+  * **CPU Load-Assisted Frequency Scaling**: Uses the foreground heaviest thread utilization collected via eBPF (EMA-smoothed) to apply a util_cap soft ceiling on perf_index, preventing frequency from running high with no actual load.
+  * **Auto Capacity Weight Detection**: Reads each core cluster's `cpu_capacity` at runtime and automatically computes capacity_weight (higher weight for big cores) — no manual core architecture configuration needed.
+  * **Per-App Configuration**: Supports individual frame rate gear lists and frame rate margins for each game, with runtime dynamic matching to the nearest gear.
+  * **Loading Scene Detection**: Automatically identifies game loading screens (sustained heavy frames). Upon entering loading state, it locks to mid-to-high frequencies and resumes normal scheduling with protection after loading ends.
+  * **Frequency Hysteresis**: Hysteresis bands are set between adjacent frequency steps to prevent rapid toggling at boundaries.
+  * **Jank Cooldown**: After a severe frame drop, the engine enters a cooldown period during which it maintains a higher frequency to avoid triggering a chain of stutters. Jank response intensity increases exponentially with consecutive drops.
+  * **Frequency Verification & Recovery**: Periodically reads back actual frequency to detect external overrides (e.g., thermal throttling), automatically unmounts and rewrites.
+  * **Windowed Mode Support**: FAS state supports suspend/resume (5-second grace period). After a brief interruption, scheduling can resume quickly without re-initialization.
+  * **perf_floor Deadlock Rescue**: Detects situations where perf_index is stuck at the floor for extended periods while frame rate is severely insufficient, automatically resetting to cold-boot performance level.
 
-#### FAS 配置 (`rules.yaml`)
+#### FAS Configuration (`rules.yaml`)
 
-FAS 的参数通过 `rules.yaml` 中的 `fas_rules` 节进行配置：
+FAS parameters are configured in the `fas_rules` section of `rules.yaml`:
 
 ```yaml
 fas_rules:
@@ -238,57 +238,57 @@ fas_rules:
       fps_margin: 3.0
 ```
 
-**关键参数说明：**
+**Key Parameter Reference:**
 
-| 参数 | 类型 | 默认值 | 描述 |
+| Parameter | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `fps_gears` | float[] | [30,60,90,120,144] | 支持的帧率档位列表，FAS 会在这些档位间自动切换。 |
-| `fps_margin` | string | "3.0" | 帧率余量（fps），EMA 预算 = 1000/(target - margin)，提供容错空间。 |
-| `pid.kp / ki / kd` | float | 0.050/0.010/0.006 | PID 控制器的比例、积分、微分系数。 |
-| `auto_capacity_weight` | bool | true | 是否自动探测各核心簇容量权重。关闭时使用 `cluster_profiles` 手动配置。 |
-| `freq_range_steps_below` | int | 1 | 下限最多比目标频点低几档。填 0 只使用目标频点。 |
-| `perf_floor` | float | 0.22 | perf_index 下限（高刷游戏会动态抬高）。 |
-| `perf_ceil` | float | 1.0 | perf_index 上限。 |
-| `perf_init` | float | 0.45 | 正常启动时的初始 perf_index。 |
-| `perf_cold_boot` | float | 0.85 | 冷启动期间的 perf_index（前 3.5 秒）。 |
-| `freq_hysteresis` | float | 0.015 | 频率迟滞系数，防止相邻档位间频繁跳变。 |
-| `heavy_frame_threshold_ms` | float | 150.0 | 重帧阈值（毫秒），超过此值的帧被视为加载帧。 |
-| `loading_cumulative_ms` | float | 2500.0 | 累计重帧时长超过此值后进入加载状态。 |
-| `post_loading_perf` | float | 0.65 | 加载结束后的 perf_index。 |
-| `core_temp_threshold` | float | 0.0 | 温度降频阈值（℃），0 = 禁用。 |
-| `core_temp_throttle_perf` | float | 0.70 | 温度降频时的 perf 上限。 |
-| `util_cap_divisor` | float | 0.45 | CPU 负载辅助调频的除数（越小越激进地限频）。 |
-| `upgrade_confirm_frames` | int | 60 | 升档确认帧数，连续 N 帧达标才执行升档。 |
-| `downgrade_confirm_frames` | int | 90 | 降档确认帧数，连续 N 帧不达标才执行降档。 |
-| `upgrade_cooldown_after_downgrade` | int | 90 | 降档后升档冷却帧数，防止档位震荡。 |
-| `gear_dampen_frames` | int | 60 | 档位切换后阻尼帧数，期间不触发新档位切换。 |
-| `downgrade_boost_perf_inc` | float | 0.18 | 降档前紧急提频的 perf 增量。 |
-| `downgrade_boost_duration` | int | 45 | 降档前紧急提频持续帧数。 |
-| `fast_decay_frame_threshold` | int | 75 | 快速衰减触发阈值（连续正常帧数）。 |
-| `fast_decay_perf_threshold` | float | 0.70 | 快速衰减 perf 阈值，perf 低于此值不衰减。 |
-| `fast_decay_max_step` | float | 0.022 | 快速衰减最大步长。 |
-| `fast_decay_min_step` | float | 0.004 | 快速衰减最小步长。 |
-| `jank_cooldown_frames` | int | 15 | 卡顿冷却帧数，冷却期内维持较高频率。 |
-| `max_inc_damped` | float | 0.045 | 阻尼状态下的 PID 输出上限。 |
-| `max_inc_normal` | float | 0.075 | 正常状态下的 PID 输出上限。 |
-| `damped_perf_cap` | float | 0.92 | 阻尼状态的 perf 上限。 |
-| `app_switch_gap_ms` | float | 3000.0 | 应用切换判定间隔（ms），帧间隔超过此值视为切换。 |
-| `app_switch_resume_perf` | float | 0.60 | 应用切换后的恢复 perf。 |
-| `freq_force_reapply_interval` | int | 30 | 每隔多少帧跳过频率迟滞重新评估区间，0 为禁用。 |
-| `verify_freq_interval_secs` | int | 3 | 检查有效频率范围的间隔（秒），0 为禁用。 |
-| `fixed_max_frame_ms` | float | 500.0 | 帧间隔上限（ms），超过此值的帧忽略。 |
-| `cold_boot_ms` | int | 3500 | 冷启动期（ms），期间使用 perf_cold_boot。 |
-| `per_app_profiles` | map | {} | 每个游戏的独立配置，支持 `target_fps` 和 `fps_margin`。 |
+| `fps_gears` | float[] | [30,60,90,120,144] | Supported frame rate gear list; FAS automatically switches between these levels. |
+| `fps_margin` | string | "3.0" | Frame rate margin (fps). EMA budget = 1000 / (target − margin), providing a tolerance buffer. |
+| `pid.kp / ki / kd` | float | 0.050/0.010/0.006 | PID controller proportional, integral, and derivative coefficients. |
+| `auto_capacity_weight` | bool | true | Whether to auto-detect core cluster capacity weights. When disabled, uses manually configured `cluster_profiles`. |
+| `freq_range_steps_below` | int | 1 | Maximum steps below the target frequency. Set to 0 to use only the target frequency. |
+| `perf_floor` | float | 0.22 | Minimum perf_index (dynamically raised for high-refresh games). |
+| `perf_ceil` | float | 1.0 | Maximum perf_index. |
+| `perf_init` | float | 0.45 | Initial perf_index on normal startup. |
+| `perf_cold_boot` | float | 0.85 | perf_index during cold boot period (first 3.5 seconds). |
+| `freq_hysteresis` | float | 0.015 | Frequency hysteresis coefficient, preventing frequent toggling between adjacent steps. |
+| `heavy_frame_threshold_ms` | float | 150.0 | Heavy frame threshold (ms). Frames exceeding this value are treated as loading frames. |
+| `loading_cumulative_ms` | float | 2500.0 | Enters loading state when cumulative heavy frame duration exceeds this value. |
+| `post_loading_perf` | float | 0.65 | perf_index after loading ends. |
+| `core_temp_threshold` | float | 0.0 | Temperature throttling threshold (°C). 0 = disabled. |
+| `core_temp_throttle_perf` | float | 0.70 | Performance ceiling during temperature throttling. |
+| `util_cap_divisor` | float | 0.45 | Divisor for CPU load-assisted frequency scaling (smaller = more aggressive throttling). |
+| `upgrade_confirm_frames` | int | 60 | Consecutive frames meeting target before gear upgrade is executed. |
+| `downgrade_confirm_frames` | int | 90 | Consecutive frames below target before gear downgrade is executed. |
+| `upgrade_cooldown_after_downgrade` | int | 90 | Upgrade cooldown frames after a downgrade, preventing gear oscillation. |
+| `gear_dampen_frames` | int | 60 | Dampen frames after gear switch; no new gear switch during this period. |
+| `downgrade_boost_perf_inc` | float | 0.18 | Emergency perf boost increment before a downgrade. |
+| `downgrade_boost_duration` | int | 45 | Duration (frames) of the emergency boost before a downgrade. |
+| `fast_decay_frame_threshold` | int | 75 | Consecutive normal frames threshold to trigger fast decay. |
+| `fast_decay_perf_threshold` | float | 0.70 | Perf threshold below which fast decay is suppressed. |
+| `fast_decay_max_step` | float | 0.022 | Maximum fast decay step size. |
+| `fast_decay_min_step` | float | 0.004 | Minimum fast decay step size. |
+| `jank_cooldown_frames` | int | 15 | Jank cooldown frames; maintains higher frequency during cooldown. |
+| `max_inc_damped` | float | 0.045 | Maximum PID output in damped state. |
+| `max_inc_normal` | float | 0.075 | Maximum PID output in normal state. |
+| `damped_perf_cap` | float | 0.92 | Perf ceiling in damped state. |
+| `app_switch_gap_ms` | float | 3000.0 | App switch detection interval (ms). Frame gaps exceeding this are treated as app switches. |
+| `app_switch_resume_perf` | float | 0.60 | Recovery perf after an app switch. |
+| `freq_force_reapply_interval` | int | 30 | Interval in frames for reevaluating the range without hysteresis. Set to 0 to disable. |
+| `verify_freq_interval_secs` | int | 3 | Effective frequency range check interval in seconds. Set to 0 to disable. |
+| `fixed_max_frame_ms` | float | 500.0 | Maximum frame interval (ms). Frames exceeding this are ignored. |
+| `cold_boot_ms` | int | 3500 | Cold boot duration (ms). Uses perf_cold_boot during this period. |
+| `per_app_profiles` | map | {} | Per-game configuration, supporting `target_fps` and `fps_margin`. |
 
 -----
 
-### ⚙️ 高级配置 (`config.yaml` 详解)
+### ⚙️ Advanced Configuration (`config.yaml` Explained)
 
-yumi 使用 YAML 格式的配置文件，允许用户进行深度自定义。
+yumi uses a YAML-formatted configuration file, allowing for deep customization.
 
-#### 1️⃣ 元信息 (`meta`)
+#### 1️⃣ Metadata (`meta`)
 
-这部分定义了守护进程的基本行为。
+This section defines the basic behavior of the daemon.
 
 ```yaml
 meta:
@@ -296,12 +296,12 @@ meta:
   language: "en"
 ```
 
-| 字段 | 类型 | 描述 |
+| Field | Type | Description |
 | :--- | :--- | :--- |
-| `loglevel` | string | 日志记录详细程度。可选值：`DEBUG`, `INFO`, `WARN`, `ERROR`。支持运行时热更新。 |
-| `language` | string | 守护进程日志的语言。目前支持 `en` (英语) 和 `zh` (中文)。支持运行时热切换。 |
+| `loglevel` | string | Log level detail. Options: `DEBUG`, `INFO`, `WARN`, `ERROR`. Supports runtime hot-update. |
+| `language` | string | Daemon log language. Currently supports `en` (English) and `zh` (Chinese). Supports runtime hot-switch. |
 
-#### 2️⃣ 功能开关 (`function`)
+#### 2️⃣ Function Toggles (`function`)
 
 ```yaml
 function:
@@ -309,14 +309,14 @@ function:
   IOOptimization: true
 ```
 
-| 功能 | 描述 |
+| Function | Description |
 | :--- | :--- |
-| `CpuIdleScalingGovernor`| 是否允许自定义 CPU Idle 调速器（见 `CpuIdle` 部分）。 |
-| `IOOptimization` | 启用 I/O 优化，遍历所有块设备应用调度器和参数设置（见 `IO_Settings` 部分）。 |
+| `CpuIdleScalingGovernor`| Whether to allow custom CPU Idle governors (see `CpuIdle` section). |
+| `IOOptimization` | Enables I/O optimization, iterating over all block devices to apply scheduler and parameter settings (see `IO_Settings` section). |
 
-#### 3️⃣ I/O 设置 (`IO_Settings`)
+#### 3️⃣ I/O Settings (`IO_Settings`)
 
-需要 `function.IOOptimization` 为 `true`。启用后会遍历 `/sys/block/*` 下的所有块设备，逐一应用以下参数。
+Requires `function.IOOptimization` to be `true`. When enabled, iterates over all block devices under `/sys/block/*` and applies the following parameters.
 
 ```yaml
 IO_Settings:
@@ -326,30 +326,30 @@ IO_Settings:
   iostats: "0"
 ```
 
-| 字段 | 类型 | 描述 |
+| Field | Type | Description |
 | :--- | :--- | :--- |
-| `Scheduler` | string | I/O 调度器，如 `"none"`, `"mq-deadline"`, `"bfq"`, `"kyber"`。留空则不修改。 |
-| `read_ahead_kb` | string | 预读大小（KB）。 |
-| `nomerges` | string | 合并策略。`0`=允许合并，`1`=仅简单合并，`2`=禁止合并。 |
-| `iostats` | string | I/O 统计信息。`0`=禁用（推荐，减少开销），`1`=启用。 |
+| `Scheduler` | string | I/O scheduler, e.g., `"none"`, `"mq-deadline"`, `"bfq"`, `"kyber"`. Leave empty to keep the system default. |
+| `read_ahead_kb` | string | Read-ahead size (KB). |
+| `nomerges` | string | Merge policy. `0` = allow merges, `1` = simple merges only, `2` = disable merges. |
+| `iostats` | string | I/O statistics. `0` = disable (recommended, reduces overhead), `1` = enable. |
 
 #### 4️⃣ CPU Idle (`CpuIdle`)
 
-需要 `function.CpuIdleScalingGovernor` 为 `true`。
+Requires `function.CpuIdleScalingGovernor` to be `true`.
 
 ```yaml
 CpuIdle:
   current_governor: "ladder"
 ```
 
-  * `current_governor`: 设置 CPU Idle 调速器。
+  * `current_governor`: Sets the CPU Idle governor.
 
-#### 5️⃣ 性能模式配置
+#### 5️⃣ Performance Mode Configuration
 
-每种性能模式可独立配置 CPU 负载调速器 (CLG) 的参数：
+Each performance mode can independently configure CPU Load Governor (CLG) parameters:
 
 ```yaml
-# 省电模式 — 极致续航
+# Powersave — maximize battery life
 powersave:
   cpu_load_governor:
     governor: system
@@ -371,7 +371,7 @@ powersave:
     down_fast_threshold: 0.10
     down_fast_mult: 2.5
 
-# 均衡模式 — 日常使用
+# Balance — daily use
 balance:
   cpu_load_governor:
     governor: system
@@ -393,7 +393,7 @@ balance:
     down_fast_threshold: 0.10
     down_fast_mult: 2.5
 
-# 性能模式 — 优先响应
+# Performance — prioritize responsiveness
 performance:
   cpu_load_governor:
     governor: system
@@ -415,7 +415,7 @@ performance:
     down_fast_threshold: 0.10
     down_fast_mult: 2.5
 
-# 极速模式 — 最大性能释放
+# Fast — maximum performance
 fast:
   cpu_load_governor:
     governor: system
@@ -438,130 +438,130 @@ fast:
     down_fast_mult: 2.5
 ```
 
-| 参数 | 类型 | 默认值 | 描述 |
+| Parameter | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `up_threshold` | float | 0.80 | 负载超过此阈值时，目标性能带 headroom 余量（headroom 在阈值附近线性渐变）。 |
-| `down_threshold` | float | 0.50 | 负载低于此阈值时按正常速率降频；阈值之上（滞回带内）用慢速降频防抖，避免高频锁定。 |
-| `smoothing_up` | float | 0.60 | 升频平滑系数（越大越快）。 |
-| `smoothing_down` | float | 0.30 | 降频平滑系数（越大越快）。 |
-| `down_rate_limit_ticks` | int | 3 | 降频速率限制（tick 数，每 tick 200ms）。 |
-| `up_rate_limit_ticks` | int | 2 | 升频速率限制（tick 数）。连续 N tick 高负载才升频，防止瞬时毛刺。 |
-| `headroom_factor` | float | 1.25 | 目标性能 = 实际负载 × headroom，提供频率余量；headroom 在 up_threshold 附近线性渐变至该值，避免阶跃振荡。 |
-| `headroom_ramp` | float | 0.15 | headroom 过渡带宽度：负载从 up_threshold-headroom_ramp 升至 up_threshold 时，headroom 由 1.0 线性渐变至 headroom_factor。 |
-| `freq_range_steps_below` | int | 2 | 下限最多比目标频点低几档。填 0 只使用目标频点。 |
-| `perf_floor` | float | 0.15 | 性能下限。 |
-| `perf_ceil` | float | 1.0 | 性能上限。 |
-| `perf_init` | float | 0.50 | 初始性能值。 |
-| `up_jump_threshold` | float | 0.35 | 目标性能超过当前性能的幅度大于此值时，按快速通道升频。 |
-| `slow_up_scale` | float | 0.02 | 滞回带内升频的最低速率基准（对 smoothing_up 的缩放）；速率随 util 接近 up_threshold 线性提升至全速，防止中等负载升频过慢。 |
-| `slow_down_scale` | float | 0.5 | 滞回带（down_threshold~up_threshold）内降频时对 smoothing_down 的缩放系数。 |
-| `down_fast_threshold` | float | 0.10 | 负载低于此值时触发快速降频（且跳过降频确认期立即生效）。 |
-| `down_fast_mult` | float | 2.5 | 快速降频时对 smoothing_down 的放大倍数。 |
-| `spike_jump_threshold` | float | 0.35 | 尖峰抑制：单 tick 负载跳升超过此值时，其增量按 spike_decay 比例衰减，避免孤立瞬时尖峰（如单核 0↔100%）瞬间拉满性能。 |
-| `spike_decay` | float | 0.30 | 尖峰增量保留比例（0=完全抑制，1=不抑制）。 |
+| `up_threshold` | float | 0.80 | Target perf gains headroom margin when load exceeds this threshold (headroom ramps smoothly near the threshold). |
+| `down_threshold` | float | 0.50 | Ramps down at normal rate when load drops below this threshold; slow ramp-down inside the hysteresis band to avoid high-freq lockup. |
+| `smoothing_up` | float | 0.60 | Ramp-up smoothing coefficient (larger = faster). |
+| `smoothing_down` | float | 0.30 | Ramp-down smoothing coefficient (larger = faster). |
+| `down_rate_limit_ticks` | int | 3 | Ramp-down rate limit (in ticks, each tick = 200ms). |
+| `up_rate_limit_ticks` | int | 2 | Ramp-up rate limit (in ticks). Boost only after N consecutive high-load ticks to prevent transient spikes. |
+| `headroom_factor` | float | 1.25 | Target perf = actual load × headroom, providing frequency margin; headroom transitions linearly near up_threshold to avoid step oscillation. |
+| `headroom_ramp` | float | 0.15 | Headroom transition width: as load rises from up_threshold - headroom_ramp to up_threshold, headroom ramps linearly from 1.0 to headroom_factor. |
+| `freq_range_steps_below` | int | 2 | Maximum steps below the target frequency. Set to 0 to use only the target frequency. |
+| `perf_floor` | float | 0.15 | Performance floor. |
+| `perf_ceil` | float | 1.0 | Performance ceiling. |
+| `perf_init` | float | 0.50 | Initial performance value. |
+| `up_jump_threshold` | float | 0.35 | When target perf exceeds current perf by more than this amount, ramp up via the fast path. |
+| `slow_up_scale` | float | 0.02 | Minimum ramp-up rate basis inside the hysteresis band (scaling of smoothing_up); the rate ramps linearly toward full speed as util approaches up_threshold, preventing slow mid-load ramp-up. |
+| `slow_down_scale` | float | 0.5 | Scaling factor applied to smoothing_down inside the hysteresis band (down_threshold..up_threshold), preventing high-freq lockup and hunting. |
+| `down_fast_threshold` | float | 0.10 | Fast ramp-down triggers when load drops below this value (also bypasses the ramp-down confirmation delay). |
+| `down_fast_mult` | float | 2.5 | Multiplier applied to smoothing_down for fast ramp-down. |
+| `spike_jump_threshold` | float | 0.35 | Spike suppression: when load jumps more than this in a single tick, the increment is scaled by spike_decay, preventing isolated transient spikes (e.g. single core 0↔100%) from saturating perf instantly. |
+| `spike_decay` | float | 0.30 | Fraction of the spike increment that is kept (0 = fully suppressed, 1 = no suppression). |
 
 -----
 
-### 📊 eBPF 探针详解
+### 📊 eBPF Probes — In Depth
 
-yumi 使用两个 eBPF 探针进行内核级数据采集：
+yumi uses two eBPF probes for kernel-level data collection:
 
-#### CPU 探针 (`yumi-ebpf`)
+#### CPU Probe (`yumi-ebpf`)
 
-挂载到 `tracepoint/sched/sched_switch`，在每次上下文切换时触发，记录：
+Attached to `tracepoint/sched/sched_switch`, triggered on every context switch, recording:
 
-  * **每核心 idle/busy 时间**: 通过 `PERCPU_ARRAY` 累计，用户态读取后计算真实利用率。
-  * **每核心当前 TID**: 用于用户态实时补偿尚未触发 sched_switch 的任务时间。
-  * **线程运行时间**: 通过 `LRU_HASH` map 记录每个线程的累计 CPU 时间，用于计算前台应用最重线程利用率；条目被驱逐后重新建立采样基线。
+  * **Per-core idle/busy time**: Accumulated via `PERCPU_ARRAY`; userspace reads and computes real utilization.
+  * **Per-core current TID**: Used by userspace to compensate in real time for tasks that haven't yet triggered a sched_switch.
+  * **Thread runtime**: Records cumulative CPU time in an `LRU_HASH` map to compute the foreground app's heaviest thread utilization, re-establishing a baseline after counter eviction/reset.
 
-#### FPS 探针 (`yumi-ebpf`)
+#### FPS Probe (`yumi-ebpf`)
 
-挂载到 `libgui.so` 的帧提交函数（uprobe），在每帧渲染提交时触发。`Surface::queueBuffer` 的符号签名在 Android 16 回合并版本和 Android 17 上变过，因此按候选列表顺序尝试：Android 16 及以下的裸指针重载、Android 16 中间形态的 `sp<GraphicBuffer>&&` 重载、Android 17 的 `sp<GraphicBuffer>`/`sp<Fence>` 重载，最后回退到签名长期稳定的 `ANativeWindow` 入口 `hook_queueBuffer`：
+Attached to a `libgui.so` frame submission function (uprobe), triggered on every frame submission. The `Surface::queueBuffer` symbol changed shape in Android 16 ROM backports and again in Android 17, so candidates are tried in order: the raw-pointer overload for Android 16 and below, the Android 16 interim `sp<GraphicBuffer>&&` overload, the Android 17 `sp<GraphicBuffer>`/`sp<Fence>` overloads, and finally the signature-stable `ANativeWindow` entry `hook_queueBuffer`:
 
-  * **内核侧时间戳采集**: 在 eBPF 中通过 `bpf_ktime_get_ns()` 记录帧提交时间，通过 RingBuf 或兼容后端 PerfEventArray 传输到用户态。CPU、RingBuf FPS、PerfEvent FPS 分别编译，避免 map 加载失败相互影响。
-  * **per-PID uprobe 挂载**: 每个目标进程持有独立的 eBPF 实例，PID 切换时自动 detach 旧实例并 attach 新实例，确保只捕获目标进程的帧事件。
-  * **用户态帧间隔计算**: 按内核时间戳合并帧事件，每个新帧间隔仅发送一次，过滤异常帧间隔（1ms~200ms）；没有新帧时不重发缓存值。
-  * **监控失效保护**: CLG 收到有效 CPU 样本后才接管频率；FAS 等待有效 CPU 和目标进程帧数据。监控退出或数据超过 2 秒未更新时释放相应控制，并尝试恢复接管前的 governor 和频率范围。切换控制器时先恢复旧控制器管理的调速器和频率范围。
+  * **Kernel-side timestamp capture**: Records frame submission time via `bpf_ktime_get_ns()` and sends it through RingBuf, with a separate PerfEventArray fallback when RingBuf creation is unsupported. CPU, RingBuf FPS and PerfEvent FPS probes are compiled separately so their map failures are isolated. Device kernel features and permissions still determine availability.
+  * **Per-PID uprobe attachment**: Each target process holds an independent eBPF instance. On PID switch, the old instance is automatically detached and a new one attached to the new PID, ensuring only the target process's frame events are captured.
+  * **Userspace frame interval calculation**: Merges events by kernel timestamp, emits each new interval once, and filters abnormal intervals (1ms–200ms). It never replays a cached interval while rendering is stopped.
+  * **Monitor failure handling**: CLG takes control only after valid CPU samples arrive; FAS also requires frames from the target process. Monitor exit or a two-second sample timeout releases the affected controller and attempts to restore the previous governor and frequency limits. Controller handovers first restore the previous governor and frequency limits.
 
 -----
 
-## 📥 安装说明
+## 📥 Installation Instructions
 
-### 前置要求
+### Prerequisites
 
-1.  **获取 Root 权限**
-2.  **确保内核支持 eBPF**（大部分 Android 10+ 设备均已支持）
+1.  **Obtain Root Access**
+2.  **Ensure kernel supports eBPF** (most Android 10+ devices already support this)
 
-### 安装步骤
+### Installation Steps
 
-1.  **下载模块** - 从 [Releases](https://github.com/imacte/yumi/releases) 下载最新版本。
-2.  **刷入模块** - 通过 Magisk / KernelSU 刷入 yumi 模块。
-3.  **访问 WebUI** - 模块启动后，通过浏览器访问 WebUI 进行管理和配置。
-4.  **配置规则** - 根据需要为不同应用设置性能策略。
+1.  **Download the Module** — Download the latest release from the [Releases](https://github.com/imacte/yumi/releases) page.
+2.  **Flash the Module** — Flash the yumi module via Magisk / KernelSU.
+3.  **Access the WebUI** — Once the module starts, open the WebUI in your browser to manage and configure settings.
+4.  **Configure Rules** — Set performance strategies for different apps as needed.
 
-## 🚀 性能优化建议
+## 🚀 Performance Optimization Suggestions
 
-### 日常使用
+### Daily Use
 
-1.  **使用均衡模式** - CLG 自适应调频，为大部分应用提供最佳的性能功耗平衡。
-2.  **设置应用规则** - 为游戏应用设置 FAS 模式。
+1.  **Use Balance Mode** — CLG adaptive frequency scaling provides the best performance/power balance for most apps.
+2.  **Set App Rules** — Assign FAS mode for gaming apps.
 
-### 游戏优化
+### Gaming Optimization
 
-1.  **使用 FAS 模式** - 帧感知调度可在保证流畅度的同时自动省电，推荐作为游戏的首选模式。
-2.  **配置 per-app 参数** - 在 `rules.yaml` 中为特定游戏设置 `target_fps` 和 `fps_margin`。
-3.  **调整 PID 系数** - 如果觉得调频响应过快或过慢，可微调 `kp`/`ki`/`kd`。
-4.  **监控温度** - 设置 `core_temp_threshold` 启用温度保护，长时间游戏时防止过热。
+1.  **Use FAS Mode** — Frame-aware scheduling automatically saves power while maintaining smoothness; recommended as the primary gaming mode.
+2.  **Configure Per-App Parameters** — Set `target_fps` and `fps_margin` for specific games in `rules.yaml`.
+3.  **Tune PID Coefficients** — If frequency response feels too fast or too slow, fine-tune `kp`/`ki`/`kd`.
+4.  **Monitor Temperature** — Set `core_temp_threshold` to enable thermal protection during extended gaming sessions.
 
-### 省电优化
+### Power Saving Optimization
 
-1.  **使用省电模式** - CLG 低性能上限，在低负载场景下最大化续航。
-2.  **息屏自动省电** - 无需手动操作，息屏时自动进入 Doze 模式。
-3.  **优化 I/O 调度** - 减少存储访问的功耗开销。
+1.  **Use Powersave Mode** — CLG with low performance ceiling maximizes battery life in low-load scenarios.
+2.  **Auto Screen-Off Savings** — No manual action needed; Doze mode activates automatically when the screen is off.
+3.  **Optimize I/O Scheduler** — Reduce power consumption from storage access.
 
-## 🔍 故障排除
+## 🔍 Troubleshooting
 
-### 常见问题
+### Frequently Asked Questions
 
-**Q: 模块无法获取 Root 权限？**
+**Q: The module can't get Root access?**
 
-  * 确保设备已正确 Root 并安装 Magisk / KernelSU。
-  * 检查 Root 管理器中是否允许了 yumi 的 Root 请求。
-  * 尝试重新刷入模块或重启设备。
+  * Ensure your device is properly rooted and Magisk / KernelSU is installed.
+  * Check your Root manager settings to ensure the yumi Root request has been granted.
+  * Try reflashing the module or restarting the device.
 
-**Q: eBPF 探针加载失败？**
+**Q: eBPF probes fail to load?**
 
-  * 确保内核支持 eBPF（`CONFIG_BPF=y`、`CONFIG_BPF_SYSCALL=y`）。
-  * 查看日志中的 eBPF 错误信息。
-  * 部分旧内核可能不支持所需的 BPF 功能。
+  * Ensure kernel supports eBPF (`CONFIG_BPF=y`, `CONFIG_BPF_SYSCALL=y`).
+  * Check the logs for eBPF error messages.
+  * Some older kernels may not support the required BPF features.
 
-**Q: 智能动态模式不工作？**
+**Q: Smart Dynamic Mode isn't working?**
 
-  * 验证应用规则是否正确配置。
-  * 验证 yumi 模块是否安装并正常运行。
-  * 检查 `ignored_apps` 列表是否误将目标应用排除。
+  * Verify that app rules are configured correctly.
+  * Verify that the yumi module is installed and running correctly.
+  * Check whether `ignored_apps` list accidentally excludes the target app.
 
-**Q: 性能模式切换无效？**
+**Q: Performance modes aren't switching?**
 
-  * 验证 yumi 模块是否安装并正常运行。
-  * 查看 yumi 模块日志以确定具体错误信息。
-  * 验证配置文件格式是否正确（YAML 语法敏感）。
+  * Verify that the yumi module is installed and running correctly.
+  * View the yumi module logs to identify specific error messages.
+  * Verify the configuration file format is correct (YAML syntax sensitive).
 
-**Q: FAS 模式下帧率不稳定？**
+**Q: Frame rate is unstable in FAS mode?**
 
-  * 检查 `rules.yaml` 中的 `fps_gears` 是否包含目标帧率。
-  * 适当增大 `fps_margin` 可提供更多余量，减少边界波动。
-  * 查看日志中的 FAS 心跳信息（每 30 帧输出一次），确认调度状态是否正常。
-  * 若频率被温控覆盖，日志中会出现 "freq mismatch" 提示，属正常校验恢复行为。
-  * 尝试为该游戏配置 `per_app_profiles` 中的专属参数。
+  * Check that `fps_gears` in `rules.yaml` includes the target frame rate.
+  * Increasing `fps_margin` provides more headroom and reduces boundary fluctuations.
+  * Check the FAS heartbeat entries in the logs (output every 30 frames) to confirm the scheduling state is normal.
+  * If the frequency is being overridden by thermal throttling, a "freq mismatch" message will appear in the logs — this is normal verification and recovery behavior.
+  * Try configuring dedicated parameters for the game in `per_app_profiles`.
 
-**Q: CPU 利用率数据不准确？**
+**Q: CPU utilization data seems inaccurate?**
 
-  * eBPF CPU 探针需要内核支持 `tracepoint/sched/sched_switch`。
-  * 用户态读取周期为 200ms，包含实时状态补偿以提高精度。
-  * 检查日志中的 cpu_monitor 初始化信息，确认在线核心列表是否正确。
+  * The eBPF CPU probe requires kernel support for `tracepoint/sched/sched_switch`.
+  * Userspace read cycle is 200ms, with real-time state compensation to improve accuracy.
+  * Check the cpu_monitor initialization info in the logs to confirm the online core list is correct.
 
-## 📊 项目统计
+## 📊 Project Statistics
 
 <div align="center">
 
@@ -569,17 +569,17 @@ yumi 使用两个 eBPF 探针进行内核级数据采集：
 
 </div>
 
-## 📮 联系我们
+## 📮 Contact Us
 
-  * **GitHub Issues** - [项目问题和建议](https://github.com/imacte/yumi/issues)
-  * **QQ 群** - 1036909137
-  * **Telegram** - [加入 TG 频道](https://t.me/+gp4adLJAsXYzMjc1)
+  * **GitHub Issues** — [For project issues and suggestions](https://github.com/imacte/yumi/issues)
+  * **QQ Group** — 1036909137
+  * **Telegram** — [Join TG Channel](https://t.me/+gp4adLJAsXYzMjc1)
 
 -----
 
 <div align="center">
 
-<sub>📅 文档更新时间：2026年3月11日</sub><br>
-<sub>🚀 yumi - 让每一台 Android 设备都拥有最佳的性能体验</sub>
+<sub>📅 Document Updated: March 11, 2026</sub><br>
+<sub>🚀 yumi — Giving every Android device the best performance experience</sub>
 
 </div>

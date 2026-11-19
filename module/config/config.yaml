@@ -1,31 +1,31 @@
-# 元数据信息
+# Metadata
 meta:
   name: "default_config"
   author: "yuki"
   language: "en"
   loglevel: "INFO"
 
-# 主要功能开关
+# Feature switches
 function:
   CpuIdleScalingGovernor: false
   IOOptimization: true
 
-# IO 设置
+# I/O settings
 IO_Settings:
   Scheduler: "none"
   read_ahead_kb: "128"
   nomerges: "2"
   iostats: "0"
 
-# CPU 空闲设置
+# CPU idle settings
 CpuIdle:
   current_governor: ""
 
-# --- 性能模式 ---
-# governor: system 沿用接管前的 CPU 调速器，也可以填设备支持的名称（如 schedutil）。
-# freq_range_steps_below: 频率下限最多比目标频点低几档，0 表示单档。
+# --- Performance profiles ---
+# governor: Use system to keep the previous governor or specify a supported governor such as schedutil.
+# freq_range_steps_below: Maximum frequency steps below the target. Use 0 for a single frequency.
 
-# 省电模式
+# Power saving mode
 powersave:
   cpu_load_governor:
     governor: system
@@ -49,7 +49,7 @@ powersave:
     spike_jump_threshold: 0.35
     spike_decay: 0.30
 
-# 均衡模式
+# Balanced mode
 balance:
   cpu_load_governor:
     governor: system
@@ -73,7 +73,7 @@ balance:
     spike_jump_threshold: 0.35
     spike_decay: 0.30
 
-# 性能模式
+# Performance mode
 performance:
   cpu_load_governor:
     governor: system
@@ -97,7 +97,7 @@ performance:
     spike_jump_threshold: 0.35
     spike_decay: 0.30
 
-# 极速模式
+# Fast mode
 fast:
   cpu_load_governor:
     governor: system

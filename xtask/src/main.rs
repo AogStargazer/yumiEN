@@ -23,7 +23,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// 编译 Yumi 项目并打包
+    /// Build and package Yumi
     #[command(alias = "b")]
     Build,
 }
@@ -118,7 +118,7 @@ fn build(sh: &Shell) -> Result<()> {
     );
     let zip_path = output_dir.join(zip_filename);
 
-    println!("开始打包: {}", zip_path.display());
+    println!("Creating package: {}", zip_path.display());
 
     let options: FileOptions<'_, ()> = FileOptions::default()
         .compression_method(CompressionMethod::Deflated)
@@ -126,7 +126,7 @@ fn build(sh: &Shell) -> Result<()> {
         
     zip_create_from_directory_with_options(&zip_path, &temp_dir, |_| options)?;
 
-    println!("构建并打包成功！");
+    println!("Build and packaging completed successfully.");
     Ok(())
 }
 
@@ -142,7 +142,7 @@ fn aarch64_bin_path() -> PathBuf {
 }
 
 fn build_core(sh: &Shell) -> Result<()> {
-    println!("正在编译 Rust Core...");
+    println!("Building the Rust core...");
     // push_env 会在当前作用域内设置环境变量，离开作用域自动恢复
     let _env = sh.push_env("RUSTFLAGS", "-C default-linker-libraries");
     cmd!(sh, "cargo +nightly ndk --platform 26 -t arm64-v8a build -Z build-std -r --locked --future-incompat-report").run()?;
@@ -150,7 +150,7 @@ fn build_core(sh: &Shell) -> Result<()> {
 }
 
 fn build_webui(sh: &Shell) -> Result<()> {
-    println!("正在编译 WebUI...");
+    println!("Building the WebUI...");
     // push_dir 类似于 cd，离开作用域后会自动切回原目录
     let _dir = sh.push_dir("webui");
     cmd!(sh, "npm run build").run()?;
